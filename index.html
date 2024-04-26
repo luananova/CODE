@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Gráfico de Barras com Filtros e Cores Personalizadas</title>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <style>
+      /* Estilos do tooltip */
+      .tooltip {
+        position: absolute;
+        background-color: rgba(0, 0, 0, 0.8);
+        color: white;
+        padding: 8px;
+        border-radius: 4px;
+        pointer-events: none;
+        opacity: 0;
+      }
+
+      /* Estilos para posicionar o dropdown acima dos gráficos */
+      #dataSelector {
+        position: absolute;
+        top: 90px;
+        left: 10px;
+      }
+
+      #chart {
+        margin-top: 50px; /* Espaço para o dropdown */
+      }
+
+      /* Definindo uma largura mínima para o contêiner que envolve o gráfico e o título */
+      #chart-container {
+        min-width: 700px; /* ou o valor desejado */
+        margin-top: 50px; /* Espaço para o dropdown */
+      }
+    </style>
+  </head>
+  <body>
+    <div id="chart-container">
+      <h2>Pessoas analfabetas com dificuldades funcionais por região</h2>
+      <select id="dataSelector"></select>
+
+      <div id="chart"></div>
+
+      <script>
+        // Ordena as regiões conforme a ordem desejada
+        var orderedRegions = [
+          "Nordeste",
+          "Sudeste",
+          "Sul",
+          "Norte",
+          "Centro-Oeste"
+        ];
+
+        // Lê os dados do CSV e cria estruturas de dados para os dropdowns
+        d3.csv("dados.csv").then(function (data) {
+          // Filtra as linhas correspondentes à região 'Brasil' para excluí-la
+          data = data.filter((d) => d["Brasil e Grande Região"] !== "Brasil");
+
+          const difficulties = Array.from(
+            new Set(data.map((d) => d["Tipos de dificuldades funcionais"]))
+          );
+
+          // Preenche as opções dos dropdowns
+          const difficultySelector = document.getElementById("dataSelector");
+          difficulties.forEach((difficulty) => {
+            const option = document.createElement("option");
+            option.value = difficulty;
+            option.textContent = difficulty;
+            difficultySelector.appendChild(option);
+          });
+
+          // Dados do gráfico
+          var datasets = {};
+
+          // Organiza os dados em datasets por dificuldade
+          difficulties.forEach((difficulty) => {
+            datasets[difficulty] = data
+              .filter(
+                (d) => d["Tipos de dificuldades funcionais"] === difficulty
+              )
+              .sort(
+                (a, b) =>
+                  orderedRegions.indexOf(a["Brasil e Grande Região"]) -
+                  orderedRegions.indexOf(b["Brasil e Grande Região"])
+              )
+              .map((d) => {
+                return {
+                  regiao: d["Brasil e Grande Região"],
+                  total: parseInt(d["Total"])
+                };
+              });
+          });
+
+          // Gradiente de cores de vermelho (mais escuro a mais claro)
+          var colorScale = d3
+            .scaleSequential(d3.interpolateReds)
+            .domain([0, d3.max(datasets[difficulties[0]], (d) => d.total)]);
+
+          var selectedData = difficulties[0]; // Dificuldade inicialmente selecionada
+
+          // Dimensões do gráfico
+          var margin = { top: 20, right: 30, bottom: 40, left: 40 },
+            width = 600 - margin.left - margin.right,
+            height = 400 - margin.top - margin.bottom;
+
+          // Criação do SVG
+          var svg = d3
+            .select("#chart")
+            .append("svg")
+            .attr("width", width + margin.left + margin.right)
+            .attr("height", height + margin.top + margin.bottom)
+            .append("g")
+            .attr(
+              "transform",
+              "translate(" + margin.left + "," + margin.top + ")"
+            );
+
+          // Escalas
+          var x = d3.scaleBand().range([0, width]).padding(0.1);
+          var y = d3.scaleLinear().range([height, 0]);
+
+          x.domain(datasets[selectedData].map((d) => d.regiao));
+          y.domain([0, d3.max(datasets[selectedData], (d) => d.total)]);
+
+          // Criação das barras com transições
+          svg
+            .selectAll(".bar")
+            .data(datasets[selectedData])
+            .enter()
+            .append("rect")
+            .attr("class", "bar")
+            .attr("x", (d) => x(d.regiao))
+            .attr("width", x.bandwidth())
+            .attr("y", height) // P/ começar no fundo do gráfico
+            .attr("height", 0) // Altura inicial 0
+            .attr("fill", (d) => colorScale(d.total)) // Define a cor das barras
+            .on("mouseover", function (event, d) {
+              d3.select(this).attr("opacity", 0.7);
+              // P/ exibir tooltip
+              tooltip
+                .html("<strong>Total:</strong> " + d.total)
+                .style("left", event.pageX + 10 + "px")
+                .style("top", event.pageY - 28 + "px")
+                .style("opacity", 1);
+            })
+            .on("mouseout", function () {
+              d3.select(this).attr("opacity", 1);
+              // P/ esconder tooltip
+              tooltip.style("opacity", 0);
+            })
+            .transition() // Adicionando transição suave
+            .duration(1000) // Duração da transição em milissegundos
+            .attr("y", (d) => y(d.total)) // Nova posição vertical da barra
+            .attr("height", (d) => height - y(d.total)); // Nova altura da barra
+
+          // Eixos
+          svg
+            .append("g")
+            .attr("class", "x-axis")
+            .attr("transform", "translate(0," + height + ")")
+            .call(d3.axisBottom(x));
+
+          svg.append("g").attr("class", "y-axis").call(d3.axisLeft(y));
+
+          // Criação do tooltip
+          var tooltip = d3
+            .select("body")
+            .append("div")
+            .attr("class", "tooltip");
+
+          // Função para atualizar o gráfico com base na seleção do dropdown
+          function updateChart(selectedValue) {
+            selectedData = selectedValue;
+            var newData = datasets[selectedData];
+
+            // Atualizando a escala x e as cores
+            x.domain(newData.map((d) => d.regiao));
+
+            // Atualiza a escala de cores com o novo valor máximo
+            colorScale.domain([0, d3.max(newData, (d) => d.total)]);
+
+            // Calculando o valor máximo entre todos os conjuntos de dados
+            var maxTotal = d3.max(
+              Object.values(datasets).flatMap((dataset) =>
+                dataset.map((d) => d.total)
+              )
+            );
+
+            // Atualiza a escala y com o novo valor máximo
+            y.domain([0, maxTotal]);
+
+            var bars = svg.selectAll(".bar").data(newData);
+
+            bars
+              .enter()
+              .append("rect")
+              .attr("class", "bar")
+              .attr("x", (d) => x(d.regiao))
+              .attr("width", x.bandwidth())
+              .attr("y", height)
+              .attr("height", 0)
+              .attr("fill", (d) => colorScale(d.total))
+              .on("mouseover", function (event, d) {
+                d3.select(this).attr("opacity", 0.7);
+                tooltip
+                  .html("<strong>Total:</strong> " + d.total)
+                  .style("left", event.pageX + 10 + "px")
+                  .style("top", event.pageY - 28 + "px")
+                  .style("opacity", 1);
+              })
+              .on("mouseout", function () {
+                d3.select(this).attr("opacity", 1);
+                tooltip.style("opacity", 0);
+              })
+              .transition()
+              .duration(1000)
+              .attr("y", (d) => y(d.total))
+              .attr("height", (d) => height - y(d.total))
+              .attr("fill", (d) => colorScale(d.total));
+
+            bars
+              .transition()
+              .duration(1000)
+              .attr("x", (d) => x(d.regiao))
+              .attr("width", x.bandwidth())
+              .attr("y", (d) => y(d.total))
+              .attr("height", (d) => height - y(d.total))
+              .attr("fill", (d) => colorScale(d.total));
+
+            bars
+              .exit()
+              .transition()
+              .duration(1000)
+              .attr("y", height)
+              .attr("height", 0)
+              .remove();
+
+            svg.select(".x-axis").call(d3.axisBottom(x));
+            svg.select(".y-axis").call(d3.axisLeft(y));
+          }
+
+          // Atualiza o gráfico quando o valor do dropdown muda
+          var dataSelector = document.getElementById("dataSelector");
+          dataSelector.addEventListener("change", function () {
+            var selectedValue = dataSelector.value;
+            updateChart(selectedValue);
+          });
+        });
+      </script>
+    </div>
+  </body>
+</html>
