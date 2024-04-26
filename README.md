@@ -1,2 +1,23 @@
-# CODE
-Created with CodeSandbox
+# Data Analysis and Visualization Projects with PNAD 2022 Database
+
+This repository hosts two data analysis and visualization projects based on the Pesquisa Nacional por Amostra de Domicílio (PNAD) 2022 database. PNAD is a survey conducted by the Instituto Brasileiro de Geografia e Estatística (IBGE) in a sample of Brazilian households. It investigates various socio-economic characteristics of society, including population, education, employment, income, housing, social security, migration, fertility, marriage, health, nutrition, among others.
+
+Both projects focus on analyzing data related to people with disabilities from the PNAD 2022 database, employing different technologies for visualization and analysis.
+
+- Dataset: [Link to the data](https://drive.google.com/drive/folders/1YLqoE9MggGa8_46DYM0ATky23g-mYcHZ?usp=sharing)
+
+## Project 1: Analysis of Illiterate People with Functional Difficulties by Region
+
+### Description
+The project developed on CodeSandbox is an interactive data visualization of illiterate people with functional difficulties by region in Brazil. It utilizes HTML, CSS, and JavaScript technologies, with the D3.js library to create interactive bar charts.
+
+### Project Contents
+- HTML/CSS/JavaScript file: [Link to CodeSandbox](https://codesandbox.io/p/sandbox/pessoas-com-deficiencia-2022-pnad-com-dados-lkglsc?file=%2Findex.html&layout=%257B%2522sidebarPanel%2522%253A%2522EXPLORER%2522%252C%2522rootPanelGroup%2522%253A%257B%2522direction%2522%253A%2522horizontal%2522%252C%2522contentType%2522%253A%2522UNKNOWN%2522%252C%2522type%2522%253A%2522PANEL_GROUP%2522%252C%2522id%2522%253A%2522ROOT_LAYOUT%2522%252C%2522panels%2522%253A%255B%257B%2522type%2522%253A%2522PANEL_GROUP%2522%252C%2522contentType%2522%253A%2522UNKNOWN%2522%252C%2522direction%2522%253A%2522vertical%2522%252C%2522id%2522%253A%2522clvgtho2c00073b6idotjpm4n%2522%252C%2522sizes%2522%253A%255B100%252C0%255D%252C%2522panels%2522%253A%255B%257B%2522type%2522%253A%2522PANEL_GROUP%2522%252C%2522contentType%2522%253A%2522EDITOR%2522%252C%2522direction%2522%253A%2522horizontal%2522%252C%2522id%2522%253A%2522EDITOR%2522%252C%2522panels%2522%253A%255B%257B%2522type%2522%253A%2522PANEL%2522%252C%2522contentType%2522%253A%2522EDITOR%2522%252C%2522id%2522%253A%2522clvgtho2c00033b6iuz1riw0g%2522%257D%255D%257D%252C%257B%2522type%2522%253A%2522PANEL_GROUP%2522%252C%2522contentType%2522%253A%2522SHELLS%2522%252C%2522direction%2522%253A%2522horizontal%2522%252C%2522id%2522%253A%2522SHELLS%2522%252C%2522panels%2522%253A%255B%257B%2522type%2522%253A%2522PANEL%2522%252C%2522contentType%2522%253A%2522SHELLS%2522%252C%2522id%2522%253A%2522clvgtho2c00043b6izpvb6u6n%2522%257D%255D%252C%2522sizes%2522%253A%255B100%255D%257D%255D%257D%252C%257B%2522type%2522%253A%2522PANEL_GROUP%2522%252C%2522contentType%2522%253A%2522DEVTOOLS%2522%252C%2522direction%2522%253A%2522vertical%2522%252C%2522id%2522%253A%2522DEVTOOLS%2522%252C%2522panels%2522%253A%255B%257B%2522type%2522%253A%2522PANEL%2522%252C%2522contentType%2522%253A%2522DEVTOOLS%2522%252C%2522id%2522%253A%2522clvgtho2c00063b6ifj2tb3tt%2522%257D%255D%252C%2522sizes%2522%253A%255B100%255D%257D%255D%252C%2522sizes%2522%253A%255B40%252C60%255D%257D%252C%2522tabbedPanels%2522%253A%257B%2522clvgtho2c00033b6iuz1riw0g%2522%253A%257B%2522tabs%2522%253A%255B%257B%2522id%2522%253A%2522clvgtho2c00023b6ij2i79vgz%2522%252C%2522mode%2522%253A%2522permanent%2522%252C%2522type%2522%253A%2522FILE%2522%252C%2522filepath%2522%253A%2522%252Findex.html%2522%257D%255D%252C%2522id%2522%253A%2522clvgtho2c00033b6iuz1riw0g%2522%252C%2522activeTabId%2522%253A%2522clvgtho2c00023b6ij2i79vgz%2522%257D%252C%2522clvgtho2c00063b6ifj2tb3tt%2522%253A%257B%2522tabs%2522%253A%255B%257B%2522id%2522%253A%2522clvgtho2c00053b6ixjbuqqpp%2522%252C%2522mode%2522%253A%2522permanent%2522%252C%2522type%2522%253A%2522UNASSIGNED_PORT%2522%252C%2522port%2522%253A0%252C%2522path%2522%253A%2522%252F%2522%257D%255D%252C%2522id%2522%253A%2522clvgtho2c00063b6ifj2tb3tt%2522%252C%2522activeTabId%2522%253A%2522clvgtho2c00053b6ixjbuqqpp%2522%257D%252C%2522clvgtho2c00043b6izpvb6u6n%2522%253A%257B%2522tabs%2522%253A%255B%255D%252C%2522id%2522%253A%2522clvgtho2c00043b6izpvb6u6n%2522%257D%257D%252C%2522showDevtools%2522%253Atrue%252C%2522showShells%2522%253Afalse%252C%2522showSidebar%2522%253Atrue%252C%2522sidebarPanelSize%2522%253A15%257D)
+
+## Project 2: Average Monthly Income of People with Disabilities in the 5 Regions of Brazil by Education Level
+
+### Description
+The project developed on Google Colab focuses on analyzing the average monthly income of people with disabilities in the five regions of Brazil by education level. It utilizes Python and Jupyter Notebook for data analysis and visualization.
+
+### Project Contents
+- Jupyter Notebook: [Link to Google Colab](https://colab.research.google.com/drive/1qsDBkbtBa7coUOVcfvSzWIIJMz_gi4rg?usp=sharing)
